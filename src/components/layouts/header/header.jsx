@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useState } from "react";
 import {
@@ -37,6 +37,7 @@ import {
   Settings,
   UserCircle,
 } from "lucide-react";
+import { useCartStore } from "@/store/cart/cart";
 
 const navItems = ["Home", "Contact", "About", "Sign Up"];
 
@@ -62,6 +63,11 @@ export default function Header() {
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const { getProductsFromCart, productsFromCart } = useCartStore();
+
+  useEffect(() => {
+    getProductsFromCart();
+  }, []);
 
   const handleUserMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -92,6 +98,7 @@ export default function Header() {
     }
     setCartOpen(open);
   };
+  
 
   return (
     <>
@@ -218,7 +225,7 @@ export default function Header() {
                 onClick={toggleCart(true)}
               >
                 <Badge
-                  badgeContent={cartItems.length}
+                  badgeContent={productsFromCart.length}
                   color="error"
                   sx={{
                     "& .MuiBadge-badge": {

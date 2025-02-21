@@ -13,19 +13,24 @@ import {
   Stack,
   Badge,
 } from "@mui/material";
-import { Favorite, FavoriteBorder, Visibility } from "@mui/icons-material";
+import { Visibility } from "@mui/icons-material";
 import { api } from "@/config/config";
-import Image from "next/image";
+import { useCartStore } from "@/store/cart/cart";
+import { useHomeStore } from "@/store/home/home";
 
 export default function ProductCard({ product }) {
-  const [isWishlisted, setIsWishlisted] = useState(false);
-
-  const discountPercentage = product.hasDiscount
+  const { addProductToCart } = useCartStore();
+  const [product1, setProduct1] = useState(product);
+  const discountPercentage = product1.hasDiscount
     ? Math.round(
-        ((product.price - product.discountPrice) / product.price) * 100
+        ((product1.price - product1.discountPrice) / product1.price) * 100
       )
     : 0;
 
+  const handleAddProductToCart = () => {
+    addProductToCart(product1.id);
+    setProduct1((prevState) => ({ ...prevState, productInMyCart: true }));
+  };
   return (
     <Card
       sx={{
@@ -37,9 +42,10 @@ export default function ProductCard({ product }) {
         "&:hover button": {
           display: "block",
         },
+        marginBottom: "10px",
       }}
     >
-      {product.hasDiscount && (
+      {product1.hasDiscount && (
         <Badge
           sx={{
             position: "absolute",
@@ -72,8 +78,8 @@ export default function ProductCard({ product }) {
       <Box sx={{ position: "relative" }}>
         <CardMedia
           component="img"
-          image={`${api}/images/${product.image}`}
-          alt={product.productName}
+          image={`${api}/images/${product1.image}`}
+          alt={product1.productName}
           sx={{
             pt: 2,
             objectFit: "contain",
@@ -88,9 +94,20 @@ export default function ProductCard({ product }) {
             width: "100%",
             position: "absolute",
             bottom: 0,
+            "&.Mui-disabled": {
+              bgcolor: "grey.900",
+              color: "white",
+              opacity: 0.7,
+              cursor: "not-allowed",
+            },
           }}
+          onClick={(e) => {
+            handleAddProductToCart();
+            e.stopPropagation();
+          }}
+          disabled={product1.productInMyCart}
         >
-          add to cart
+          {product1.productInMyCart ? "В корзине" : "Добавить в корзину"}
         </Button>
       </Box>
       <CardContent sx={{ flexGrow: 1, pt: 2 }}>
@@ -100,20 +117,20 @@ export default function ProductCard({ product }) {
           component="h2"
           sx={{ fontWeight: 500 }}
         >
-          {product.productName}
+          {product1.productName}
         </Typography>
 
         <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
           <Typography variant="h6" color="error.main" sx={{ fontWeight: 600 }}>
-            ${product.hasDiscount ? product.discountPrice : product.price}
+            ${product1.hasDiscount ? product1.discountPrice : product1.price}
           </Typography>
-          {product.hasDiscount && (
+          {product1.hasDiscount && (
             <Typography
               variant="body1"
               color="text.secondary"
               sx={{ textDecoration: "line-through" }}
             >
-              ${product.price}
+              ${product1.price}
             </Typography>
           )}
         </Stack>

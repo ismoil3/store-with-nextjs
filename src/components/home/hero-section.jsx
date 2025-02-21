@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import {
   Box,
   Button,
+  CircularProgress,
   Grid,
   List,
   ListItem,
@@ -11,7 +12,12 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { ArrowRight, ChevronRight, ArrowBack, ArrowForward } from "@mui/icons-material";
+import {
+  ArrowRight,
+  ChevronRight,
+  ArrowBack,
+  ArrowForward,
+} from "@mui/icons-material";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -151,7 +157,7 @@ export default function HomePage() {
 
   return (
     <Container>
-      <Grid sx={{marginTop:"10px"}} container spacing={4}>
+      <Grid sx={{ marginTop: "10px" }} container spacing={4}>
         {/* ======== Блок с категориями ======== */}
         <Grid item xs={12} md={3} lg={2}>
           <Box
@@ -187,47 +193,58 @@ export default function HomePage() {
                 },
               }}
             >
-              {categories.map((category) => (
-                <ListItem
-                  key={category.id * 948}
-                  sx={{
-                    py: { xs: 1, md: 1.5 },
-                    px: { xs: 2, md: 2 },
-                    mr: { xs: 2, md: 0 },
-                    borderColor: "divider",
-                    borderRadius: { xs: 4, md: 0 }, // "пилюли" на маленьких экранах
-                    "&:hover": {
-                      bgcolor: "ButtonFace",
-                      cursor: "pointer",
-                    },
-                    // При желании можно подсвечивать активную категорию по-другому
-                    ...(activeCategory === category.categoryName && {
-                      bgcolor: "action.selected",
-                    }),
-                  }}
-                  onClick={() => setActiveCategory(category.categoryName)}
-                >
-                  <ListItemText
-                    primary={category.categoryName}
+              {categories.length > 0 ? (
+                categories.map((category) => (
+                  <ListItem
+                    key={category.id * 948}
                     sx={{
-                      "& .MuiListItemText-primary": {
-                        fontSize: "0.9rem",
+                      py: { xs: 1, md: 1.5 },
+                      px: { xs: 2, md: 2 },
+                      mr: { xs: 2, md: 0 },
+                      borderColor: "divider",
+                      borderRadius: { xs: 4, md: 0 }, // "пилюли" на маленьких экранах
+                      "&:hover": {
+                        bgcolor: "ButtonFace",
+                        cursor: "pointer",
                       },
+                      // При желании можно подсвечивать активную категорию по-другому
+                      ...(activeCategory === category.categoryName && {
+                        bgcolor: "action.selected",
+                      }),
                     }}
-                  />
-                  {/* Иконка подменю (ChevronRight) — только на больших экранах */}
-                  {category.hasSubmenu && (
-                    <ListItemIcon
+                    onClick={() => setActiveCategory(category.categoryName)}
+                  >
+                    <ListItemText
+                      primary={category.categoryName}
                       sx={{
-                        minWidth: "auto",
-                        display: { xs: "none", md: "block" },
+                        "& .MuiListItemText-primary": {
+                          fontSize: "0.9rem",
+                        },
                       }}
-                    >
-                      <ChevronRight />
-                    </ListItemIcon>
-                  )}
-                </ListItem>
-              ))}
+                    />
+                    {/* Иконка подменю (ChevronRight) — только на больших экранах */}
+                    {category.hasSubmenu && (
+                      <ListItemIcon
+                        sx={{
+                          minWidth: "auto",
+                          display: { xs: "none", md: "block" },
+                        }}
+                      >
+                        <ChevronRight />
+                      </ListItemIcon>
+                    )}
+                  </ListItem>
+                ))
+              ) : (
+                <Box sx={{display:"flex",flexDirection:"column",alignContent:"center",alignItems:"center",justifySelf:"center"}}>
+                  <CircularProgress sx={{margin:"auto"}} />
+                  <Box sx={{ marginTop: "20px" }}>
+                    <Typography variant="h6" gutterBottom>
+                      No categories found
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
             </List>
           </Box>
         </Grid>
@@ -258,9 +275,9 @@ export default function HomePage() {
               },
             }}
           >
-            <Slider  {...sliderSettings}>
+            <Slider {...sliderSettings}>
               {slides.map((slide) => (
-                <Box sx={{paddingLeft:"50px"}} key={slide.id}>
+                <Box sx={{ paddingLeft: "50px" }} key={slide.id}>
                   <Container maxWidth="xl">
                     <Box
                       sx={{
@@ -303,7 +320,11 @@ export default function HomePage() {
                           variant="h4"
                           sx={{
                             mb: 3,
-                            fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" },
+                            fontSize: {
+                              xs: "1.5rem",
+                              sm: "2rem",
+                              md: "2.5rem",
+                            },
                           }}
                         >
                           {slide.subtitle}
@@ -357,7 +378,6 @@ export default function HomePage() {
           </Box>
         </Grid>
       </Grid>
-
-</Container>
+    </Container>
   );
 }

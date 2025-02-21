@@ -1,10 +1,10 @@
 "use client";
 
+import { api } from "@/config/config";
 import axios from "axios";
-import { apiSoftInsta } from "@/app/config/config";
 
 const axiosRequest = axios.create({
-  baseURL: apiSoftInsta,
+  baseURL: api,
 });
 
 axiosRequest.interceptors.request.use((config) => {

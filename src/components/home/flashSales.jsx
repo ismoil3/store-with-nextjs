@@ -1,60 +1,70 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { Box, Typography, Button, Container, IconButton, Rating, Stack, useTheme, useMediaQuery } from "@mui/material"
-import { Heart, Eye, ChevronLeft, ChevronRight } from "lucide-react"
-import Slider from "react-slick"
-import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
-import ProductCard from "../shared/cardProduct/cardProduct"
-import { useHomeStore } from "@/store/home/home"
-
-
-
-
+import { useState, useEffect, useRef } from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  IconButton,
+  Rating,
+  Stack,
+  useTheme,
+  useMediaQuery,
+  CircularProgress,
+} from "@mui/material";
+import { Heart, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import ProductCard from "../shared/cardProduct/cardProduct";
+import { useHomeStore } from "@/store/home/home";
+import Container from "../shared/container/container";
 
 export default function FlashSales() {
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"))
-  const isTablet = useMediaQuery(theme.breakpoints.down("md"))
-  const sliderRef = useRef(null)
-  const [isBeginning, setIsBeginning] = useState(true)
-  const [isEnd, setIsEnd] = useState(false)
-  const {getProducts,products} = useHomeStore()
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+  const sliderRef = useRef(null);
+  const [isBeginning, setIsBeginning] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
+  const { getProducts, products } = useHomeStore();
 
   const [timeLeft, setTimeLeft] = useState({
     days: 3,
     hours: 23,
     minutes: 19,
     seconds: 56,
-  })
+  });
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
-        const newSeconds = prev.seconds - 1
-        if (newSeconds >= 0) return { ...prev, seconds: newSeconds }
+        const newSeconds = prev.seconds - 1;
+        if (newSeconds >= 0) return { ...prev, seconds: newSeconds };
 
-        const newMinutes = prev.minutes - 1
-        if (newMinutes >= 0) return { ...prev, minutes: newMinutes, seconds: 59 }
+        const newMinutes = prev.minutes - 1;
+        if (newMinutes >= 0)
+          return { ...prev, minutes: newMinutes, seconds: 59 };
 
-        const newHours = prev.hours - 1
-        if (newHours >= 0) return { ...prev, hours: newHours, minutes: 59, seconds: 59 }
+        const newHours = prev.hours - 1;
+        if (newHours >= 0)
+          return { ...prev, hours: newHours, minutes: 59, seconds: 59 };
 
-        const newDays = prev.days - 1
-        if (newDays >= 0) return { days: newDays, hours: 23, minutes: 59, seconds: 59 }
+        const newDays = prev.days - 1;
+        if (newDays >= 0)
+          return { days: newDays, hours: 23, minutes: 59, seconds: 59 };
 
-        clearInterval(timer)
-        return prev
-      })
-    }, 1000)
+        clearInterval(timer);
+        return prev;
+      });
+    }, 1000);
 
-    return () => clearInterval(timer)
-  }, [])
+    return () => clearInterval(timer);
+  }, []);
 
-  useEffect(()=>{
-    getProducts()
-  },[])
+  useEffect(() => {
+    getProducts();
+  }, []);
 
   const settings = {
     dots: isMobile,
@@ -87,10 +97,10 @@ export default function FlashSales() {
       },
     ],
     beforeChange: (current, next) => {
-      setIsBeginning(next === 0)
-      setIsEnd(next + (isMobile ? 1 : isTablet ? 2 : 4) >= products.length)
+      setIsBeginning(next === 0);
+      setIsEnd(next + (isMobile ? 1 : isTablet ? 2 : 4) >= products.length);
     },
-  }
+  };
 
   const TimeBox = ({ value, label }) => (
     <Box
@@ -114,19 +124,25 @@ export default function FlashSales() {
       >
         {value.toString().padStart(2, "0")}
       </Typography>
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: { xs: "none", sm: "block" } }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ mt: 0.5, display: { xs: "none", sm: "block" } }}
+      >
         {label}
       </Typography>
     </Box>
-  )
+  );
 
   return (
-    <Container maxWidth="xl" sx={{ py: { xs: 2, sm: 4 } }}>
-      <Box sx={{ mb: { xs: 2, sm: 4 } }}>
+    <Container>
+      <Box
+        sx={{ marginTop: "20px", py: { xs: 2, sm: 4 }, mb: { xs: 2, sm: 4 } }}
+      >
         <Typography
           component="span"
           sx={{
-            color: "error.main",
+            color: "white",
             bgcolor: "error.light",
             px: 2,
             py: 0.5,
@@ -156,7 +172,10 @@ export default function FlashSales() {
               gap: { xs: 2, sm: 4 },
             }}
           >
-            <Typography variant={isMobile ? "h5" : "h4"} sx={{ fontWeight: 600 }}>
+            <Typography
+              variant={isMobile ? "h5" : "h4"}
+              sx={{ fontWeight: 600 }}
+            >
               Flash Sales
             </Typography>
             <Stack
@@ -170,15 +189,24 @@ export default function FlashSales() {
               }}
             >
               <TimeBox value={timeLeft.days} label="Days" />
-              <Typography variant={isMobile ? "body1" : "h5"} sx={{ mt: { xs: 1, sm: 0 },bgcolor:"transparent" }}>
+              <Typography
+                variant={isMobile ? "body1" : "h5"}
+                sx={{ mt: { xs: 1, sm: 0 }, bgcolor: "transparent" }}
+              >
                 :
               </Typography>
               <TimeBox value={timeLeft.hours} label="Hours" />
-              <Typography variant={isMobile ? "body1" : "h5"} sx={{ mt: { xs: 1, sm: 0 },bgcolor:"transparent" }}>
+              <Typography
+                variant={isMobile ? "body1" : "h5"}
+                sx={{ mt: { xs: 1, sm: 0 }, bgcolor: "transparent" }}
+              >
                 :
               </Typography>
               <TimeBox value={timeLeft.minutes} label="Minutes" />
-              <Typography variant={isMobile ? "body1" : "h5"} sx={{ mt: { xs: 1, sm: 0 },bgcolor:"transparent" }}>
+              <Typography
+                variant={isMobile ? "body1" : "h5"}
+                sx={{ mt: { xs: 1, sm: 0 }, bgcolor: "transparent" }}
+              >
                 :
               </Typography>
               <TimeBox value={timeLeft.seconds} label="Seconds" />
@@ -233,10 +261,31 @@ export default function FlashSales() {
           },
         }}
       >
-        <Slider ref={sliderRef} {...settings}>
-          {products.map((product) => (
-           <ProductCard key={product.id} product={product} />
-          ))}
+        <Slider infinite={true} ref={sliderRef} {...settings}>
+          {products.length > 0 ? (
+            products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignContent: "center",
+                width:"100%",
+                textAlign: "center",
+                alignItems: "center",
+                justifySelf: "center",
+              }}
+            >
+              <CircularProgress sx={{ margin: "auto" }} />
+              <Box sx={{ marginTop: "20px" }}>
+                <Typography variant="h6" gutterBottom>
+                  No products found
+                </Typography>
+              </Box>
+            </Box>
+          )}
         </Slider>
       </Box>
 
@@ -255,6 +304,5 @@ export default function FlashSales() {
         </Button>
       </Box>
     </Container>
-  )
+  );
 }
-
