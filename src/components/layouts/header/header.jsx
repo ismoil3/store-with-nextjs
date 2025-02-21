@@ -65,9 +65,7 @@ export default function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
   const { getProductsFromCart, productsFromCart } = useCartStore();
 
-  useEffect(() => {
-    getProductsFromCart();
-  }, []);
+
 
   const handleUserMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
