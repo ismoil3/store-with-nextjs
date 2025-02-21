@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images:{
-        domains: ["merve-api.softclub.tj","beeyor.tj"],
+        domains: ["store-api.softclub.tj","beeyor.tj"],
     },
 };
 
