@@ -6,7 +6,6 @@ export const useCartStore = create((set, get) => ({
     addProductToCart: async (id) => {
         try {
             await axiosRequest.post(`${api}/Cart/add-product-to-cart?id=${id}`)
-            get().getProductsFromCart()
         } catch (error) {
             console.log(error);
 
